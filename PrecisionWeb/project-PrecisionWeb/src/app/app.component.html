@@ -1,0 +1,59 @@
+<style>
+  .form .mat-form-field,
+.form .full-width {
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+</style>
+
+<br>
+
+<div class="row">
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-3">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Applicant</mat-label>
+      <mat-select [placeholder]="'Applicant'"
+          [(ngModel)]="LeaveRequest.RequestorId" id="ApplicantId" name="ApplicantId" #ApplicantId="ngModel"
+          [compareWith]="setSelected" required >
+          <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
+          <ngx-mat-select-search [formControl]="ApplicantCtrl" 
+             placeholderLabel="Applicant"
+          ></ngx-mat-select-search>
+          <mat-option>Please Select</mat-option>
+          <mat-option *ngFor="let Applicant of ApplicantList | async" [value]="Applicant.UserId">
+              {{ Applicant.FullName }} 
+            </mat-option>
+      </mat-select>
+      <mat-hint align="start">Applicant is required</mat-hint>
+      <mat-error *ngIf="ApplicantId.errors?.['required']">
+        Applicant is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-md-3">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Manager</mat-label>
+      <mat-select [placeholder]="'Manager'"
+          [(ngModel)]="LeaveRequest.ReportingToId" id="ManagerId" name="ManagerId" #ManagerId="ngModel"
+          [compareWith]="setSelected" required >
+          <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
+          <ngx-mat-select-search [formControl]="ApplicantCtrl" 
+             placeholderLabel="Manager"
+          ></ngx-mat-select-search>
+          <mat-option>Please Select</mat-option>
+          <mat-option *ngFor="let Applicant of ApplicantList | async" [value]="Applicant.UserId">
+              {{ Applicant.FullName }} 
+            </mat-option>
+      </mat-select>
+      <mat-hint align="start">Manager is required</mat-hint>
+      <mat-error *ngIf="ApplicantId.errors?.['required']">
+        Manager is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
+
