@@ -11,6 +11,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule ,ReactiveFormsModule} from '@angular/forms';
 import {AppConfigService } from '../app/Service/Appsettings.service';
 import { NgxMatSelectSearchModule}  from 'ngx-mat-select-search';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import { DatePipe } from '@angular/common';
+
 export function loadAppSettings(appConfig: AppConfigService) {
   return () => appConfig.load();
 }
@@ -30,14 +34,19 @@ export function loadAppSettings(appConfig: AppConfigService) {
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule, 
+    MatDatepickerModule,
+    MatNativeDateModule
+    
   ],
   providers: [{
     provide: APP_INITIALIZER,
     useFactory: loadAppSettings,
     deps: [AppConfigService],
     multi: true
-}],
+},
+DatePipe
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

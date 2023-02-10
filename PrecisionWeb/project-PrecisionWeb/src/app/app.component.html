@@ -9,51 +9,131 @@
 
 <br>
 
-<div class="row">
-  <div class="col-md-3">
+<form #LeaveRequestForm="ngForm" class="form">
+  <div class="row">
+    <div class="col-md-3">
+  
+    </div>
+    <div class="col-md-3">
+  
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Applicant</mat-label>
+        <mat-select [placeholder]="'Applicant'"
+            [(ngModel)]="LeaveRequest.RequestorId" id="ApplicantId" name="ApplicantId" #ApplicantId="ngModel"
+            [compareWith]="setSelected" required >
+            <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
+            <ngx-mat-select-search [formControl]="ApplicantCtrl" 
+               placeholderLabel="Applicant"
+            ></ngx-mat-select-search>
+            <mat-option>Please Select</mat-option>
+            <mat-option *ngFor="let Applicant of ApplicantList | async" [value]="Applicant.UserId"
+            [disabled]="LeaveRequest.ReportingToId == Applicant.UserId"
+            >
+                {{ Applicant.FullName }} 
+              </mat-option>
+        </mat-select>
+        <mat-hint align="start">Applicant is required</mat-hint>
+        <mat-error *ngIf="ApplicantId.errors?.['required']">
+          Applicant is required!
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="Startpicker"
+        [max]="LeaveRequest.EndDate"
+        [(ngModel)]="LeaveRequest.StartDate" name="StartDate" id="StartDate" #StartDate="ngModel">
+        <mat-datepicker-toggle  matIconSuffix [for]="Startpicker"></mat-datepicker-toggle>
+        <mat-datepicker #Startpicker></mat-datepicker>
+        <mat-hint align="start"> Start date is required</mat-hint>
+        <mat-error *ngIf="StartDate.errors?.['required']">
+             Start date is required!
+        </mat-error>
+      </mat-form-field>
+  
+  
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Return Date</mat-label>
+        <input matInput [min]="LeaveRequest.EndDate" 
+        [min]="MinDateForReturnDate"
+        [matDatepicker]="Returnpicker" [(ngModel)]="LeaveRequest.ReturnDate"
+        id="ReturnDate" name="ReturnDate"
+        #ReturnDate="ngModel">
+        <mat-datepicker-toggle  matIconSuffix [for]="Returnpicker"></mat-datepicker-toggle>
+        <mat-datepicker #Returnpicker></mat-datepicker>
+        <mat-hint align="start"> Return is required</mat-hint>
+        <mat-error *ngIf="ReturnDate.errors?.['required']">
+          Return is required!
+        </mat-error>
+      </mat-form-field>
+  
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Manager</mat-label>
+        <mat-select [placeholder]="'Manager'"
+            [(ngModel)]="LeaveRequest.ReportingToId" id="ManagerId" name="ManagerId" #ManagerId="ngModel"
+            [compareWith]="setSelected" required >
+            <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
+            <ngx-mat-select-search [formControl]="ApplicantCtrl" 
+               placeholderLabel="Manager"
+            ></ngx-mat-select-search>
+            <mat-option>Please Select</mat-option>
+            <mat-option *ngFor="let Manager of ManagerList | async" 
+            [disabled]="LeaveRequest.RequestorId == Manager.UserId"
+            [value]="Manager.UserId">
+                {{ Manager.FullName }} 
+              </mat-option>
+        </mat-select>
+        <mat-hint align="start">Manager is required</mat-hint>
+        <mat-error *ngIf="ApplicantId.errors?.['required']">
+          Manager is required!
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>End Date</mat-label>
+        <input matInput id="EndDate"name="EndDate" [min]="LeaveRequest.StartDate" [matDatepicker]="Endpicker" 
+        [(ngModel)]="LeaveRequest.EndDate" #EndDate="ngModel"
+        (ngModelChange)="ComputeTotalNoOfDays()"
+        >
+        <mat-datepicker-toggle  matIconSuffix [for]="Endpicker"></mat-datepicker-toggle>
+        <mat-datepicker #Endpicker></mat-datepicker>
+        <mat-hint align="start"> End date is required</mat-hint>
+        <mat-error *ngIf="EndDate.errors?.['required']">
+             End date is required!
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>No Of. Days</mat-label>
+        <input matInput [placeholder]="'No of days'" id="NoOfDays" type="number"
+            name="NoOfDays" #NoOfDays="ngModel" [(ngModel)]="LeaveRequest.NoOfDays"
+            maxlength="100" [disabled]="LeaveRequest.StartDate == undefined || this.LeaveRequest.EndDate 
+            == undefined"
+            [min]="1"
+            (ngModelChange)="ValidateDateStartAndEnd()"
+            />
+  
+    </mat-form-field>
+  
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
 
+    </div>
+    <div class="col-md-6">
+      <textarea id="Comments" name="Comments" [(ngModel)]="LeaveRequest.Comments"  
+      rows="4" cols="100">.</textarea>
+    </div>
   </div>
-  <div class="col-md-3">
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Applicant</mat-label>
-      <mat-select [placeholder]="'Applicant'"
-          [(ngModel)]="LeaveRequest.RequestorId" id="ApplicantId" name="ApplicantId" #ApplicantId="ngModel"
-          [compareWith]="setSelected" required >
-          <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
-          <ngx-mat-select-search [formControl]="ApplicantCtrl" 
-             placeholderLabel="Applicant"
-          ></ngx-mat-select-search>
-          <mat-option>Please Select</mat-option>
-          <mat-option *ngFor="let Applicant of ApplicantList | async" [value]="Applicant.UserId">
-              {{ Applicant.FullName }} 
-            </mat-option>
-      </mat-select>
-      <mat-hint align="start">Applicant is required</mat-hint>
-      <mat-error *ngIf="ApplicantId.errors?.['required']">
-        Applicant is required!
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div class="col-md-3">
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Manager</mat-label>
-      <mat-select [placeholder]="'Manager'"
-          [(ngModel)]="LeaveRequest.ReportingToId" id="ManagerId" name="ManagerId" #ManagerId="ngModel"
-          [compareWith]="setSelected" required >
-          <!-- <ngx-mat-select-search [formControl]="customerCtrl" ngDefaultControl></ngx-mat-select-search> -->
-          <ngx-mat-select-search [formControl]="ApplicantCtrl" 
-             placeholderLabel="Manager"
-          ></ngx-mat-select-search>
-          <mat-option>Please Select</mat-option>
-          <mat-option *ngFor="let Applicant of ApplicantList | async" [value]="Applicant.UserId">
-              {{ Applicant.FullName }} 
-            </mat-option>
-      </mat-select>
-      <mat-hint align="start">Manager is required</mat-hint>
-      <mat-error *ngIf="ApplicantId.errors?.['required']">
-        Manager is required!
-      </mat-error>
-    </mat-form-field>
-  </div>
-</div>
+
+  <button  type="submit" mat-raised-button class="btn-save"
+   (click)="CreateLeaveRequest()"
+  [disabled]="!LeaveRequestForm.form.valid">
+  <i class="fa fa-floppy-o" aria-hidden="true"></i>
+  Submit</button>
+</form>
+
 

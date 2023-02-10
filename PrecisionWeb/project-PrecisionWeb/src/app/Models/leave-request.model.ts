@@ -4,9 +4,12 @@ export class LeaveRequest {
     RequestorId: number;
     ReportingToId: number;
     RequestedBy: number | null;
-    StartDate: string;
-    EndDate: string;
-    ReturnDate: string;
+    StartDate: Date;
+    StartDateString: string;
+    EndDate: Date;
+    EndDateString: string;
+    ReturnDate: Date;
+    ReturnDateString : String;
     NoOfDays: number;
     Comments: string;
     Status: string | null;
