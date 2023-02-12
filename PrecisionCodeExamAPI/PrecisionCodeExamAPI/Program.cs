@@ -7,9 +7,10 @@ using Precision.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.Configure<KestrelServerOptions>(builder.Configuration.GetSection("Kestrel"));
 // Add services to the container.
 var applicationkeys = builder.Configuration.GetSection("ApplicationKeys").Get<ApplicationKeys>();
 
