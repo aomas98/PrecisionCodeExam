@@ -15,12 +15,12 @@ namespace Precision.ViewModel.RequestLeaveViewModel
 
         public int? RequestedBy { get; set; }
 
-        public DateTime? StartDateString { get; set; }
+        public DateTime StartDateString { get; set; }
 
 
-        public DateTime? EndDateString { get; set; }
+        public DateTime EndDateString { get; set; }
 
-        public DateTime? ReturnDateString { get; set; }
+        public DateTime ReturnDateString { get; set; }
 
         public int NoOfDays { get; set; }
 

@@ -23,7 +23,7 @@ public partial class LeaveRequest
 
     public int NoOfDays { get; set; }
 
-    public string Comments { get; set; } = null!;
+    public string? Comments { get; set; }
 
     public string? Status { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿
 
-cd "C:\Users\a839966\Desktop\Coding Exam\PrecisionCodingExam\Prcecision.Master.Data.Core"
+cd "C:\Users\a839966\Desktop\CodingExam2\PrecisionCodeExamAPI\Prcecision.Master.Data.Core"
 
 dotnet ef dbcontext scaffold "Data Source=.\SQLEXPRESS;Database=Precision;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -o EntityModel -f

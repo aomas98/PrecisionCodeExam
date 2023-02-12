@@ -19,10 +19,37 @@ namespace PrecisionCodeExamAPI.Controllers
         }
 
         [HttpPost("CreateLeaveRequest")]
-        public IActionResult CreateLeaveRequest(RequestLeaveViewModel requestLeaveViewModel)
+        public async Task<IActionResult> CreateLeaveRequest(RequestLeaveViewModel requestLeaveViewModel)
         {
             var LeaveRequest = new LeaveRequest();
-            return Ok();
+            LeaveRequest.RequestorId = requestLeaveViewModel.RequestorId;
+            LeaveRequest.ReportingToId = requestLeaveViewModel.ReportingToId;
+            LeaveRequest.StartDate = requestLeaveViewModel.StartDateString;
+            LeaveRequest.EndDate = requestLeaveViewModel.EndDateString;
+            LeaveRequest.ReturnDate = requestLeaveViewModel.ReturnDateString;
+            LeaveRequest.Comments = requestLeaveViewModel.Comments;
+
+            var result = await _leaveRequestService.CreateLeaveRequestAsync(LeaveRequest);
+            try
+            {
+               
+                if (result.ReturnStatus)
+                {
+                    return Ok(result);
+
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.ReturnStatus = false;
+                result.Errors.Add(ex.ToString());
+                return BadRequest(result);
+            }
+
         }
 
 

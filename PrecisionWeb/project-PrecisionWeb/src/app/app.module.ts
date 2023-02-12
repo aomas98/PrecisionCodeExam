@@ -14,14 +14,17 @@ import { NgxMatSelectSearchModule}  from 'ngx-mat-select-search';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { DatePipe } from '@angular/common';
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { MatConfirmComponent } from './mat-confirm/mat-confirm.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export function loadAppSettings(appConfig: AppConfigService) {
   return () => appConfig.load();
 }
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MatConfirmComponent
   ],
   imports: [
     [FlexLayoutModule],
@@ -36,7 +39,9 @@ export function loadAppSettings(appConfig: AppConfigService) {
     ReactiveFormsModule,
     NgxMatSelectSearchModule, 
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatDialogModule,
+    MatSnackBarModule
     
   ],
   providers: [{

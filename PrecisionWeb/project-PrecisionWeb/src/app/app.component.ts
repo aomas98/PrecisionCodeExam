@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ViewChild ,TemplateRef} from '@angular/core';
 import { AppConfigService } from '../app/Service/Appsettings.service';
 import { ReplaySubject, Observable } from 'rxjs';
 import { User } from './Models/user.model';
@@ -6,6 +6,10 @@ import { LeaveRequest } from './Models/leave-request.model';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Location, DatePipe, KeyValue } from '@angular/common';
+import {ResponseModel } from './Models/response-mode';
+import { MatConfirmComponent } from './mat-confirm/mat-confirm.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from "@angular/material/snack-bar";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -28,10 +32,16 @@ export class AppComponent implements OnInit {
 
   apiUsersUrl: string;
   LeaveRequestUrl: string;
+
+  ResponseModel: ResponseModel<LeaveRequest>;
+
+  @ViewChild('SaveRecord', { static: false }) public SaveRecord: TemplateRef<any>;
   constructor(
     private datePipe: DatePipe,
     private appConfigService: AppConfigService,
-    private httpClient: HttpClient) { }
+    private httpClient: HttpClient,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.apiUsersUrl = this.appConfigService.settings.MasterAPIEndpoint + 'api/Users';
@@ -49,7 +59,62 @@ export class AppComponent implements OnInit {
       });
 
   }
+  showSnackbarTopPosition(content, action, duration) {
+    this.snackBar.open(content, action, {
+      duration: 2000,
+      panelClass: ["custom-style"],
+      verticalPosition: "top", // Allowed values are  'top' | 'bottom'
+      horizontalPosition: "center" // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
+  }
 
+  CancelDialog() {
+    const ref: MatDialogRef<MatConfirmComponent> = this.dialog.open(
+      MatConfirmComponent,
+      {
+        width: '600px',
+        height: '210px',
+        data: {
+          message: 'Are you sure you want to save ?',
+          title: "Leave Request"
+        },
+        backdropClass: 'confirmDialogComponent',
+        hasBackdrop: true,
+      }
+    );
+
+    ref.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result.clicked == 'Ok'){
+        this.CreateLeaveRequest();
+      }
+    });
+
+  }
+
+  confirmDialog() {
+    const ref: MatDialogRef<MatConfirmComponent> = this.dialog.open(
+      MatConfirmComponent,
+      {
+        width: '600px',
+        height: '210px',
+        data: {
+          message: 'Are you sure you want to save ?',
+          title: "Leave Request"
+        },
+        backdropClass: 'confirmDialogComponent',
+        hasBackdrop: true,
+      }
+    );
+
+    ref.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result.clicked == 'Ok'){
+        this.CreateLeaveRequest();
+      }
+    });
+
+  }
   ValidateDateStartAndEnd() {
     this.LeaveRequest.EndDate = new Date();
     this.LeaveRequest.EndDate.setDate(this.LeaveRequest.EndDate.getDate() + (this.LeaveRequest.NoOfDays - 1));
@@ -126,8 +191,17 @@ export class AppComponent implements OnInit {
 
     this.httpClient.post(Url,this.LeaveRequest).subscribe(
       (data) => {
-
-      })
+              this.ResponseModel = data as any;
+              if(this.ResponseModel.ReturnStatus == true){
+                this.showSnackbarTopPosition('Successfully Saved!','Done','1000')
+                this.LeaveRequest = new LeaveRequest();
+              }
+              
+      }),
+      (error: any) => {
+        console.log(error);
+        this.showSnackbarTopPosition(error,'Ok','1000')
+      };
   }
 
   title = 'project-PrecisionWeb';
