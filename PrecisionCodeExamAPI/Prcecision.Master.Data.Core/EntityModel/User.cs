@@ -32,4 +32,8 @@ public partial class User
     public string? ModifiedBy { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual ICollection<LeaveRequest> LeaveRequestReportingTos { get; } = new List<LeaveRequest>();
+
+    public virtual ICollection<LeaveRequest> LeaveRequestRequestors { get; } = new List<LeaveRequest>();
 }

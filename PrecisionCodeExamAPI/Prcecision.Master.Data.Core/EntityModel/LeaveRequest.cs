@@ -38,4 +38,8 @@ public partial class LeaveRequest
     public string? ModifiedBy { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual User ReportingTo { get; set; } = null!;
+
+    public virtual User Requestor { get; set; } = null!;
 }
